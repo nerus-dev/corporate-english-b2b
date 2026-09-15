@@ -42,6 +42,12 @@ test('navigation tolerance avoids reselecting near-identical anchors',()=>{
 
 test('content preserves complete academic narrative and prospective goals',()=>{
   assert.equal(content.chapters.length,11);
+  assert.equal(content.chapters[0],'Նախագիծ');
+  assert.equal(content.chapters[8],'Agile-ի ընտրություն');
+  assert.equal(content.chapters[10],'Թիրախային արդյունք');
+  assert.doesNotMatch(contentSource,/Hybrid|արտադրանք/);
+  assert.match(content.notes[8],/Agile \/ ճկուն.*MVP.*պիլոտային.*Feedback.*ծրագիրը, ձևաչափը, գինը կամ առաջարկը/);
+  assert.match(content.notes[6],/ստեղծումն ու շուկա դուրսբերումը նախագիծ է.*մշտական իրականացումը օպերացիոն գործունեություն է/);
   assert.equal(content.notes.length,11);
   assert.ok(content.notes.every(note=>note.length>80));
   assert.equal(content.formation.length,6);
@@ -72,6 +78,11 @@ test('rendered story produces all eleven scenes in order',async()=>{
   vm.runInNewContext(`${contentSource}; ${prefix}`,{document:{querySelector:selector=>selector==='#story'?story:null}});
   const ids=[...story.innerHTML.matchAll(/<section id="scene-(\d+)"/g)].map(match=>Number(match[1]));
   assert.deepEqual(ids,Array.from({length:11},(_,i)=>i));
+  assert.doesNotMatch(story.innerHTML,/Hybrid|արտադրանք/);
+  assert.ok(story.innerHTML.includes(content.projectTitle),'Opening must visibly state the concrete project');
+  assert.match(story.innerHTML,/Ժամկետ՝ 6 շաբաթ/);
+  assert.match(story.innerHTML,/Նախագծի թիրախային արդյունքները|Հաջողության չափանիշները/);
+  assert.match(story.innerHTML,/Ընտրված մոտեցում՝ Agile \/ ճկուն/);
   assert.match(story.innerHTML,/Ուսուցում՝ հարմարեցված աշխատանքի իրական իրավիճակներին/);
 });
 
@@ -79,6 +90,10 @@ test('production build is self-contained and includes full speaker notes',async(
   execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root,stdio:'inherit'});
   const html=await read('dist/index.html');
   const notes=await read('dist/speaker-notes.html');
+  const css=await read('dist/src/styles.css');
+  for(const [,url] of css.matchAll(/url\(['"]?(\.\.[^'"\)]+)['"]?\)/g)) {
+    assert.ok((await stat(path.resolve(root,'dist/src',url))).isFile(),`Missing CSS asset ${url}`);
+  }
   for(const document of [html,notes]){
     assert.match(document,/lang="hy"/);
     for(const [,url] of document.matchAll(/(?:src|href)="([^"]+)"/g)){
