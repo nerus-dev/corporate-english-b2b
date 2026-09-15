@@ -8,7 +8,7 @@ const dot = '<i class="dot" aria-hidden="true"></i>';
 const heading = (label,title,sub='') => `<header class="scene-heading"><p class="eyebrow">${label}</p><h2>${title}</h2>${sub ? `<p class="subtitle">${sub}</p>`:''}</header>`;
 const metrics = () => `<div class="metrics"><div class="metric"><strong>${CONTENT.weeks}</strong><span>շաբաթ</span></div><div class="metric"><strong>${CONTENT.pilots}</strong><span>պիլոտ</span></div><div class="metric"><strong>${CONTENT.clients}</strong><span>վճարող ընկերություն</span></div></div>`;
 const scenes = [
-  `<div class="opening-copy"><p class="eyebrow">Նոր B2B ուղղություն</p><h1>Corporate<br><span>English</span><sup>↗</sup></h1><p class="opening-sub">Գաղափարից՝ շուկա<span>Project Concept / 01</span></p></div><div class="signal" aria-hidden="true"><svg viewBox="0 0 600 600"><defs><linearGradient id="signal-gradient" x2="1" y2="1"><stop stop-color="#a89aff"/><stop offset="1" stop-color="#70e5c5"/></linearGradient></defs><circle class="signal-ring" cx="300" cy="300" r="205"/><circle class="signal-ring inner" cx="300" cy="300" r="140"/><path class="signal-path" d="M65 405L180 290L290 365L415 190L545 115"/><g class="signal-dots"><circle cx="65" cy="405" r="7"/><circle cx="180" cy="290" r="7"/><circle cx="290" cy="365" r="7"/><circle cx="415" cy="190" r="7"/><circle cx="545" cy="115" r="9"/></g></svg><span class="signal-label">Նոր հնարավորություն</span></div>`,
+  `<div class="opening-copy"><p class="eyebrow">Նոր B2B ուղղություն</p><h1>Corporate<br><span>English</span><sup>↗</sup></h1><p class="opening-sub">Գաղափարից՝ շուկա<span>Project Concept / 01</span></p></div><div class="signal" aria-hidden="true"><svg viewBox="0 0 600 600"><defs><linearGradient id="signal-gradient" x2="1" y2="1"><stop stop-color="#65cb5e"/><stop offset="1" stop-color="#c3edbe"/></linearGradient></defs><circle class="signal-ring" cx="300" cy="300" r="205"/><circle class="signal-ring inner" cx="300" cy="300" r="140"/><path class="signal-path" d="M65 405L180 290L290 365L415 190L545 115"/><g class="signal-dots"><circle cx="65" cy="405" r="7"/><circle cx="180" cy="290" r="7"/><circle cx="290" cy="365" r="7"/><circle cx="415" cy="190" r="7"/><circle cx="545" cy="115" r="9"/></g></svg><span class="signal-label">Նոր հնարավորություն</span></div>`,
   `${heading('01 / Հնարավորություն','Անգլերենը՝<br><em>աշխատանքային գործիք</em>')}<div class="opportunity-map"><div class="people"><svg viewBox="0 0 210 155" aria-label="Ընկերության աշխատակիցներ" role="img">${[40,105,170].map((x,i)=>`<g opacity="${i===1?1:0.55}"><circle cx="${x}" cy="${i===1?36:48}" r="17"/><path d="M${x-25} 135v-42q25-30 50 0v42"/></g>`).join('')}</svg><span>Աշխատակիցներ</span></div><div class="gap"><span class="gap-before">Ընդհանուր գիտելիք</span><div class="bridge-line"></div><strong class="gap-after">Կիրառական կարիք</strong></div><div class="work-scenarios">${CONTENT.work.map((x,i)=>`<div class="work-item"><span class="work-icon">${['↗','@','▤','⇄'][i]}</span>${x}</div>`).join('')}</div></div><p class="scene-bottom reveal">Կարիքների տարբերությունը՝ նոր ծառայության հնարավորություն</p>`,
   `${heading('02 / Գաղափարի ձևավորում','Կարիքից՝ <em>նախագիծ</em>')}<div class="formation"><div class="formation-track">${line}${CONTENT.formation.map((x,i)=>`<div class="formation-node"><span class="node-index">0${i+1}</span>${dot}<h3>${x}</h3><p>${CONTENT.formationDetail[i]}</p></div>`).join('')}</div></div><p class="scene-bottom formation-result">Corporate English <span class="accent">B2B</span></p>`,
   `${heading('03 / Ի՞նչ ենք ստեղծում','Լեզու՝ իրական<br><em>աշխատանքի համար</em>')}<div class="engine-flow"><div class="company"><svg viewBox="0 0 110 130" role="img" aria-label="Ընկերություն"><path d="M15 115V25h60v90M75 55h22v60M0 115h110M31 44h10m12 0h10M31 62h10m12 0h10M31 80h10m12 0h10M40 115V98h18v17"/></svg><span>Ընկերության<br>իրավիճակներ</span></div><div class="engine-wire">→</div><div class="engine"><span class="eyebrow">Հարմարեցվող ծրագիր</span><strong>Corporate<br>English</strong><span class="engine-tag">B2B / MVP</span></div><div class="engine-wire">→</div><div class="engine-output">${CONTENT.work.map(x=>`<span class="reveal">${x}</span>`).join('')}</div></div><p class="scene-bottom reveal">Ուսուցում՝ հարմարեցված աշխատանքի իրական իրավիճակներին</p>`,
@@ -30,10 +30,20 @@ const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
 const compactQuery = matchMedia('(max-width: 700px)');
 let activeScene = 0;
 let updatePending = false;
+/** Scroll positions at which each fixed scene has fully entered. */
+let fixedAnchors = /** @type {number[]} */ ([]);
+let fixedStarts = /** @type {number[]} */ ([]);
+let storyDuration = 0;
+function syncFixedAnchors() {
+  const distance = Math.max(0,document.documentElement.scrollHeight-innerHeight);
+  fixedAnchors = fixedStarts.map((time,i)=>i===0?0:(time+.55)/storyDuration*distance);
+}
 function updateProgress() {
   updatePending = false;
   const y = scrollY;
-  activeScene = sections.reduce((current,section,i)=>section.offsetTop <= y + innerHeight * .42 ? i : current,0);
+  activeScene = fixedAnchors.length
+    ? fixedAnchors.reduce((current,position,i)=>position <= y+4 ? i : current,0)
+    : sections.reduce((current,section,i)=>section.offsetTop <= y + innerHeight * .42 ? i : current,0);
   const number = $('#chapter-number');
   const name = $('#chapter-name');
   if (number) number.textContent = String(activeScene).padStart(2,'0');
@@ -48,7 +58,7 @@ function updateProgress() {
 addEventListener('scroll',()=>{if(!updatePending){updatePending=true;requestAnimationFrame(updateProgress);}},{passive:true});
 addEventListener('resize',updateProgress);
 /** @returns {number[]} */
-function anchors(){return sections.map((s,i)=>i===0?0:s.offsetTop + (motionQuery.matches||compactQuery.matches?0:Math.min(innerHeight*.12,(s.offsetHeight-innerHeight)*.1)));}
+function anchors(){return fixedAnchors.length ? fixedAnchors : sections.map(s=>s.offsetTop);}
 addEventListener('keydown',event=>{
   const target = event.target;
   if (event.altKey||event.ctrlKey||event.metaKey||target instanceof HTMLElement && (target.isContentEditable||/INPUT|TEXTAREA|SELECT|BUTTON/.test(target.tagName))) return;
@@ -58,6 +68,13 @@ addEventListener('keydown',event=>{
   const y = event.key==='End' ? document.documentElement.scrollHeight-innerHeight : targetY;
   window.scrollTo({top:y,behavior:motionQuery.matches?'instant':'smooth'});
 });
+$('.skip')?.addEventListener('click',event=>{
+  if(!fixedAnchors.length)return;
+  event.preventDefault();
+  window.scrollTo({top:fixedAnchors[1],behavior:'instant'});
+  sections[1].setAttribute('tabindex','-1');
+  sections[1].focus({preventScroll:true});
+});
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 window.scrollTo(0,0);
 
@@ -66,9 +83,15 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
   const mm = gsap.matchMedia();
   mm.add('(prefers-reduced-motion: no-preference) and (min-width: 701px)',()=>{
     document.body.classList.add('animated');
+    const master = gsap.timeline({paused:true});
+    const stages = sections.map(section=>section.querySelector('.stage'));
+    gsap.set(stages,{autoAlpha:0});
+    gsap.set(stages[0],{autoAlpha:1});
+    fixedStarts = [];
+    let cursor = 0;
     sections.forEach((section,i)=>{
       const q = (/** @type {string} */ selector)=>section.querySelectorAll(selector);
-      const tl = gsap.timeline({scrollTrigger:{trigger:section,start:'top top',end:'bottom bottom',scrub:true,invalidateOnRefresh:true}});
+      const tl = gsap.timeline();
       tl.to({}, {duration:.2});
       if(i===0){
         tl.fromTo(q('.signal-path'),{strokeDashoffset:800},{strokeDashoffset:0,duration:2},0);
@@ -86,9 +109,44 @@ if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
       if(i===8){tl.to(q('.waterfall'),{xPercent:30,opacity:0,scale:.7,duration:1},.6);tl.to(q('.agile'),{xPercent:-30,opacity:0,scale:.7,duration:1},.6);tl.from(q('.hybrid-result'),{opacity:0,scale:.86,y:25,duration:1},1.3);}
       if(i===10){tl.to(q('.final-pre'),{opacity:0,y:-50,duration:.9},.4);tl.from(q('.final-statement'),{opacity:0,y:55,duration:1},1.1);}
       if(q('.reveal').length)tl.from(q('.reveal'),{opacity:.05,y:15,stagger:.14,duration:.6},.2);
-      tl.to({}, {duration:.35});
+      tl.to({}, {duration:.65});
+      fixedStarts.push(cursor);
+      master.addLabel(`scene-${i}`,cursor);
+      if(i>0){
+        master.fromTo(stages[i],{autoAlpha:0},{autoAlpha:1,duration:.55,ease:'power1.inOut',immediateRender:false},cursor);
+        master.fromTo(q('.scene-inner'),{y:24},{y:0,duration:.65,ease:'power2.out',immediateRender:false},cursor);
+      }
+      master.add(tl,cursor+.3);
+      cursor += tl.duration()+.3;
+      if(i<sections.length-1){
+        master.to(stages[i],{autoAlpha:0,duration:.45,ease:'power1.inOut'},cursor);
+        master.to(q('.scene-inner'),{y:-18,duration:.45,ease:'power1.inOut'},cursor);
+        cursor += .4;
+      }
     });
-    return ()=>document.body.classList.remove('animated');
+    storyDuration = master.duration();
+    const setStoryHeight = ()=>{
+      gsap.set(story,{height:innerHeight*(storyDuration*.7+1)});
+      syncFixedAnchors();
+    };
+    setStoryHeight();
+    ScrollTrigger.addEventListener('refreshInit',setStoryHeight);
+    ScrollTrigger.create({
+      trigger:story,start:'top top',end:'bottom bottom',animation:master,
+      scrub:true,invalidateOnRefresh:true,onRefresh:syncFixedAnchors,
+      onUpdate:()=>{
+        // Invisible layers must not intercept input or remain in the accessibility tree.
+        stages.forEach(stage=>{
+          if(stage instanceof HTMLElement) stage.inert=Number(gsap.getProperty(stage,'opacity'))<.5;
+        });
+      }
+    });
+    return ()=>{
+      ScrollTrigger.removeEventListener('refreshInit',setStoryHeight);
+      fixedAnchors=[];fixedStarts=[];
+      stages.forEach(stage=>{if(stage instanceof HTMLElement)stage.inert=false;});
+      document.body.classList.remove('animated');
+    };
   });
 } else {
   document.body.classList.add('static-mode');

@@ -56,6 +56,7 @@ test('content preserves complete academic narrative and prospective goals',()=>{
   assert.equal(content.weeks,6);
   assert.equal(content.pilots,2);
   assert.equal(content.clients,'1+');
+  assert.equal(content.organization,'MekStep');
   assert.match(content.smartGoal,/6 շաբաթվա.*առնվազն 2.*առնվազն 1/);
   assert.match(content.notes[0],/նպատակներ են, ոչ արդեն ձեռք բերված արդյունքներ/);
   assert.match(content.notes[1],/ստուգման ենթակա/);
@@ -123,6 +124,8 @@ test('static server handles pages, assets, HEAD, missing files and traversal',{t
     const home=await get(port,'/');
     assert.equal(home.status,200);assert.match(home.body,/<main id="story"/);
     assert.match(home.headers['content-type'],/text\/html; charset=utf-8/);
+    assert.equal((await get(port,'/assets/mekstep-logo.jpg')).headers['content-type'],'image/jpeg');
+    assert.equal((await get(port,'/assets/mekstep-icon.png')).headers['content-type'],'image/png');
     for(const url of ['/src/main.js','/src/styles.css','/vendor/gsap.min.js','/assets/mark.svg','/speaker-notes.html'])assert.equal((await get(port,url)).status,200,url);
     const head=await get(port,'/','HEAD');
     assert.equal(head.status,200);assert.equal(head.body,'');assert.equal(head.headers['content-length'],home.headers['content-length']);
