@@ -84,10 +84,11 @@ test('production build is self-contained and includes full speaker notes',async(
     for(const [,url] of document.matchAll(/(?:src|href)="([^"]+)"/g)){
       if(url.startsWith('#'))continue;
       assert.ok(!/^(?:https?:)?\/\//.test(url),`External runtime resource: ${url}`);
-      assert.ok((await stat(path.join(root,'dist',url))).isFile(),`Missing resource ${url}`);
+      assert.ok((await stat(path.join(root,'dist',url.split('?')[0]))).isFile(),`Missing resource ${url}`);
     }
   }
   assert.equal((notes.match(/<section>/g)||[]).length,11);
+  assert.match(html,/src="\.\/src\/main.js\?v=[a-f0-9]{12}"/,'Published assets must carry a content revision');
   const lists=[...notes.matchAll(/<ol>([\s\S]*?)<\/ol>/g)].map(match=>(match[1].match(/<li>/g)||[]).length);
   assert.deepEqual(lists,[11,8]);
   assert.ok(notes.includes(content.smartGoal));
