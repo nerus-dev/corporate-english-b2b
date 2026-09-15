@@ -61,7 +61,7 @@ body::before{display:none}
 .journey{position:fixed;z-index:12;left:8%;right:8%;bottom:62px;height:90px;pointer-events:none}
 .journey-road{position:absolute;bottom:0;left:0;right:0;height:7px;border-top:1px solid #c3d8bf;border-bottom:1px solid #e4ece1;background:repeating-linear-gradient(90deg,#d3e5cd 0 20px,transparent 20px 34px);border-radius:50%}
 .mascot-position{position:absolute;left:0;bottom:3px;width:100px;height:100px;transform:translateX(-50%)}
-.mascot-sprite{width:100%;height:100%;background-image:url('../assets/mascot-walk.png');background-size:400% 100%;background-repeat:no-repeat;filter:drop-shadow(0 2px 1px #223c2220)}
+.mascot-sprite{width:100%;height:100%;background-image:url('../assets/mascot-original.png');background-size:100% 100%;background-repeat:no-repeat;filter:drop-shadow(0 2px 1px #223c2220)}
 .signal{opacity:.75}.signal-label{color:var(--muted)}
 @media(max-width:700px){.journey{display:none}}
 @media(prefers-reduced-motion:reduce){.journey{display:none}}
@@ -78,3 +78,45 @@ body::before{display:none}
 @media print{.journey{display:none}}
 @media(min-width:701px) and (max-height:820px){.scene-4 h2{font-size:40px}.scene-4 .metric strong{font-size:110px}.scene-4 .smart-letters{margin-top:20px}.scene-4 .smart-summary{margin-top:15px}}
 @media(max-width:700px){.signal{display:none}}
+/* Reserve a separate footer lane: content never shares the mascot's space. */
+.journey{bottom:49px;height:90px}
+.mascot-position{width:66px;height:88px;bottom:3px}
+body:not(.animated) .journey{display:none}
+body.animated .scene-inner{height:calc(100svh - 150px);padding:106px 3.2vw 18px}
+body.animated h2{font-size:clamp(32px,3.2vw,60px);line-height:1.25}
+body.animated .scene-heading{margin-bottom:24px}
+body.animated .eyebrow{margin-bottom:16px}
+body.animated .scene-bottom{margin-top:24px}
+body.animated .opening-copy h1{font-size:clamp(68px,7.6vw,138px)}
+body.animated .project-definition{margin-top:24px;font-size:clamp(19px,1.65vw,28px)}
+body.animated .metric strong{font-size:clamp(90px,8.5vw,158px)}
+body.animated .metric span{font-size:clamp(17px,1.6vw,25px)}
+body.animated .smart-letters{margin-top:24px}
+body.animated .smart-summary{margin-top:18px}
+body.animated .scene-4 .scene-heading{margin-bottom:8px}
+body.animated .target-label{margin-top:10px}
+body.animated .proof-principles{margin-bottom:44px}
+body.animated .boundary-copy{margin-top:44px;font-size:clamp(17px,1.5vw,24px)}
+body.animated .scene-7 .scene-heading{top:116px;max-width:39%}
+body.animated .scene-7 h2{font-size:clamp(30px,2.8vw,52px)}
+body.animated .pm-system{height:44vh;max-height:465px;margin-top:40px}
+body.animated .agile-result{top:35%;bottom:18px;display:flex;flex-direction:column;justify-content:center}
+body.animated .agile-result>strong{font-size:clamp(80px,7.5vw,138px)}
+body.animated .final-statement{inset:106px 3.2vw 18px}
+body.animated .final-statement h2{font-size:clamp(32px,3.5vw,64px)}
+body.animated .final-flow{margin-top:24px}
+body.animated .final-criteria{font-size:13px;line-height:1.7;margin-top:18px}
+@media(min-width:701px) and (max-height:820px){
+ body.animated .scene-inner{padding-top:100px}
+ body.animated .week-number{font-size:60px}
+ body.animated .scene-9 .scene-heading{margin-bottom:16px}
+ body.animated .scene-9 .scene-bottom{margin-top:12px}
+ body.animated .agile-result>p{margin-top:14px;font-size:24px}
+ body.animated .agile-contract{margin-top:18px}
+}
+/* Genuine source alpha; two cropped CSS layers animate the feet without a backdrop. */
+.mascot-position{width:72px;height:88px}
+.mascot-sprite{mix-blend-mode:normal;clip-path:inset(0 0 13% 0);background-color:transparent}
+.mascot-position::before,.mascot-position::after{content:"";position:absolute;inset:0;background:url('../assets/mascot-original.png') center/100% 100% no-repeat}
+.mascot-position::before{clip-path:inset(84% 36% 0 0);transform:translateY(var(--left-step,0px))}
+.mascot-position::after{clip-path:inset(84% 0 0 64%);transform:translateY(var(--right-step,0px))}

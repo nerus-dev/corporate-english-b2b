@@ -55,11 +55,13 @@ function updateProgress() {
   const bar = /** @type {HTMLElement|null} */ ($('.progress > div'));
   if (bar) bar.style.transform = `scaleX(${progress/100})`;
   $('.progress')?.setAttribute('aria-valuenow',String(Math.round(progress)));
-  // Distance-driven frames freeze naturally when scrolling stops.
+  // Animate the original transparent mascot in CSS; scroll distance controls its steps.
   if (mascot && mascotSprite) {
     mascot.style.left = `${progress}%`;
-    const frame = motionQuery.matches ? 0 : Math.floor(Math.max(0,y)/28)%4;
-    mascotSprite.style.backgroundPosition = `${frame/3*100}% 50%`;
+    const stride = motionQuery.matches ? 0 : Math.sin(y/30);
+    mascot.style.setProperty('--left-step',`${Math.max(0,stride)*-3}px`);
+    mascot.style.setProperty('--right-step',`${Math.max(0,-stride)*-3}px`);
+    mascotSprite.style.transform = `translateY(${-Math.abs(stride)*.6}px)`;
   }
   document.body.classList.toggle('past-opening',y>innerHeight*.5);
 }

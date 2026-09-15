@@ -7,6 +7,7 @@ import {createServer} from 'node:net';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import vm from 'node:vm';
+import {inflateSync} from 'node:zlib';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=relative=>readFile(path.join(root,relative),'utf8');
@@ -91,6 +92,15 @@ test('production build is self-contained and includes full speaker notes',async(
   const html=await read('dist/index.html');
   const notes=await read('dist/speaker-notes.html');
   const css=await read('dist/src/styles.css');
+  const mascot=await readFile(path.join(root,'dist/assets/mascot-original.png'));
+  assert.equal(mascot[25],6,'Mascot must have a real RGBA channel');
+  const chunks=[];
+  for(let offset=8;offset<mascot.length;){
+    const length=mascot.readUInt32BE(offset);
+    if(mascot.toString('ascii',offset+4,offset+8)==='IDAT')chunks.push(mascot.subarray(offset+8,offset+8+length));
+    offset+=length+12;
+  }
+  assert.equal(inflateSync(Buffer.concat(chunks))[4],0,'Mascot corner must be transparent, not painted white');
   for(const [,url] of css.matchAll(/url\(['"]?(\.\.[^'"\)]+)['"]?\)/g)) {
     assert.ok((await stat(path.resolve(root,'dist/src',url))).isFile(),`Missing CSS asset ${url}`);
   }
