@@ -61,7 +61,7 @@ body::before{display:none}
 .journey{position:fixed;z-index:12;left:8%;right:8%;bottom:62px;height:90px;pointer-events:none}
 .journey-road{position:absolute;bottom:0;left:0;right:0;height:7px;border-top:1px solid #c3d8bf;border-bottom:1px solid #e4ece1;background:repeating-linear-gradient(90deg,#d3e5cd 0 20px,transparent 20px 34px);border-radius:50%}
 .mascot-position{position:absolute;left:0;bottom:3px;width:100px;height:100px;transform:translateX(-50%)}
-.mascot-sprite{width:100%;height:100%;background-image:url('../assets/mascot-original.png');background-size:100% 100%;background-repeat:no-repeat;filter:drop-shadow(0 2px 1px #223c2220)}
+.mascot-sprite{width:100%;height:100%;background-image:url('../assets/mascot-walk-transparent.png');background-size:400% 100%;background-repeat:no-repeat;filter:drop-shadow(0 2px 1px #223c2220)}
 .signal{opacity:.75}.signal-label{color:var(--muted)}
 @media(max-width:700px){.journey{display:none}}
 @media(prefers-reduced-motion:reduce){.journey{display:none}}
@@ -114,9 +114,7 @@ body.animated .final-criteria{font-size:13px;line-height:1.7;margin-top:18px}
  body.animated .agile-result>p{margin-top:14px;font-size:24px}
  body.animated .agile-contract{margin-top:18px}
 }
-/* Genuine source alpha; two cropped CSS layers animate the feet without a backdrop. */
-.mascot-position{width:72px;height:88px}
-.mascot-sprite{mix-blend-mode:normal;clip-path:inset(0 0 13% 0);background-color:transparent}
-.mascot-position::before,.mascot-position::after{content:"";position:absolute;inset:0;background:url('../assets/mascot-original.png') center/100% 100% no-repeat}
-.mascot-position::before{clip-path:inset(84% 36% 0 0);transform:translateY(var(--left-step,0px))}
-.mascot-position::after{clip-path:inset(84% 0 0 64%);transform:translateY(var(--right-step,0px))}
+
+/* Original walking pose, with extracted alpha and no pointing-hand layers. */
+.mascot-position{width:66px;height:88px}
+.mascot-sprite{mix-blend-mode:normal;background-color:transparent}

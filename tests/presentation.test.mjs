@@ -92,7 +92,7 @@ test('production build is self-contained and includes full speaker notes',async(
   const html=await read('dist/index.html');
   const notes=await read('dist/speaker-notes.html');
   const css=await read('dist/src/styles.css');
-  const mascot=await readFile(path.join(root,'dist/assets/mascot-original.png'));
+  const mascot=await readFile(path.join(root,'dist/assets/mascot-walk-transparent.png'));
   assert.equal(mascot[25],6,'Mascot must have a real RGBA channel');
   const chunks=[];
   for(let offset=8;offset<mascot.length;){
