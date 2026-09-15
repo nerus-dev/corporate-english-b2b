@@ -103,5 +103,3 @@ addEventListener('pageshow',()=>{
     updateProgress();
   });
 });
-
-

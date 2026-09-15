@@ -4,7 +4,7 @@
 
 ## Запуск
 
-Нужны Node.js и npm. Выполните в каталоге проекта:
+Для разработки нужны Node.js 24 и npm. Для запуска готового dist достаточно Node.js. Выполните в каталоге проекта:
 
 ```sh
 npm ci --ignore-scripts
@@ -54,5 +54,4 @@ HTML/CSS/JavaScript, локальные GSAP 3.13.0 и ScrollTrigger, SVG. `src/
 
 Для временного preview создан отдельный Railway-проект `corporate-english-b2b-preview` (`e931d932-1978-4ddb-85e3-e0169c34532e`), сервис `corporate-english`. Preview опубликован и проверен: https://corporate-english-production.up.railway.app (15 сентября 2026). Существующие сервисы не относятся к проекту; удаление preview выполняется только по отдельной команде пользователя.
 
-Для постоянного GitHub Pages подготовлен workflow `.github/workflows/pages.yml`. GitHub CLI авторизован; отдельный репозиторий, workflow и URL пока ожидаются. Наличие конфигурации Railway/Pages не означает, что публикация уже завершена.
-
+Для постоянного GitHub Pages подготовлен workflow `.github/workflows/pages.yml`. Отдельный репозиторий: https://github.com/nerus-dev/corporate-english-b2b. Workflow GitHub Pages успешно завершён; постоянный адрес проверен: https://nerus-dev.github.io/corporate-english-b2b/. На обеих публикациях доступны все 11 сцен, ошибок JavaScript при проверке не обнаружено.
