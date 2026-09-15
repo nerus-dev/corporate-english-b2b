@@ -20,6 +20,7 @@ await writeFile(path.join(dist,'.nojekyll'),'');
 // Content revisions prevent a CDN from mixing new HTML with old scripts/styles.
 let builtHtml=await readFile(path.join(dist,'index.html'),'utf8');
 for(const [,url] of builtHtml.matchAll(/(?:src|href)="(\.\/[^"?#]+)"/g)){
+  if(url.endsWith('.html'))continue; // Notes are a page, generated below, not a runtime asset.
   const bytes=await readFile(path.join(dist,url));
   const revision=createHash('sha256').update(bytes).digest('hex').slice(0,12);
   builtHtml=builtHtml.replaceAll(`"${url}"`,`"${url}?v=${revision}"`);

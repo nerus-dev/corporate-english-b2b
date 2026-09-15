@@ -76,7 +76,7 @@ test('rendered story produces all eleven scenes in order',async()=>{
 });
 
 test('production build is self-contained and includes full speaker notes',async()=>{
-  execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root,stdio:'pipe'});
+  execFileSync(process.execPath,['scripts/build.mjs'],{cwd:root,stdio:'inherit'});
   const html=await read('dist/index.html');
   const notes=await read('dist/speaker-notes.html');
   for(const document of [html,notes]){
