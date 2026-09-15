@@ -1,0 +1,15 @@
+{
+  "name": "corporate-english-presentation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Offline Armenian Corporate English B2B scrollytelling presentation",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "lint": "node --check src/content.js && node --check src/main.js && node --check src/navigation.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
+    "typecheck": "tsc -p jsconfig.json"
+  },
+  "dependencies": {"gsap": "3.13.0"},
+  "devDependencies": {"typescript": "6.0.2"}
+}
