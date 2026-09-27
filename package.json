@@ -7,7 +7,7 @@
     "build": "node scripts/build.mjs",
     "start": "node scripts/serve.mjs",
     "test": "node --test tests/*.test.mjs",
-    "lint": "node --check src/content.js && node --check src/main.js && node --check src/navigation.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
+    "lint": "node --check src/content.js && node --check src/main.js && node --check src/navigation.js && node --check src/integration-content.js && node --check src/deck-navigation.js && node --check src/integration.js && node --check scripts/build.mjs && node --check scripts/serve.mjs",
     "typecheck": "tsc -p jsconfig.json"
   },
   "dependencies": {"gsap": "3.13.0"},
