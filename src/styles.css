@@ -118,3 +118,6 @@ body.animated .final-criteria{font-size:13px;line-height:1.7;margin-top:18px}
 /* Original walking pose, with extracted alpha and no pointing-hand layers. */
 .mascot-position{width:66px;height:88px}
 .mascot-sprite{mix-blend-mode:normal;background-color:transparent}
+.next-assignment{margin-left:12px;padding-left:18px;border-left:1px solid var(--rule);color:var(--accent);text-decoration:none;font-size:11px;white-space:nowrap}
+.next-assignment:hover,.next-assignment:focus{text-decoration:underline}
+@media(max-width:700px){.next-assignment{position:fixed;right:16px;top:20px;margin:0;padding:8px 10px;border:1px solid var(--rule);background:#fff}.edition,.identity-divider{display:none}}
