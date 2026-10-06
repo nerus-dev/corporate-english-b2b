@@ -75,23 +75,27 @@ test('content preserves complete academic narrative and prospective goals',()=>{
   assert.equal(contentSource.split(content.organization).length-1,1,'Organization must be configurable in one constant');
 });
 
-test('assignment two is a distinct thirteen-scene integrated plan',()=>{
-  assert.equal(integration.chapters.length,13);
-  assert.equal(integration.notes.length,13);
-  assert.equal(integration.wbs.length,6);
-  assert.equal(integration.itto.length,4);
-  assert.equal(integration.roles.length,5);
-  assert.equal(integration.gates.length,5);
-  assert.match(integration.notes[0],/չենք կրկնում.*SMART.*Agile/);
-  assert.match(integration.notes[12],/2 պիլոտն ու 1\+ վճարող ընկերությունը.*թիրախ/);
-  assert.equal(deckNav.target(0,13,'next'),1);
-  assert.equal(deckNav.target(12,13,'next'),12);
-  assert.equal(deckNav.target(6,13,'previous'),5);
-  assert.equal(deckNav.target(6,13,'first'),0);
-  assert.equal(deckNav.target(6,13,'last'),12);
+test('assignment two is a distinct sixteen-scene implementation plan',()=>{
+  assert.equal(integration.chapters.length,16);
+  assert.equal(integration.notes.length,16);
+  assert.equal(integration.workBlocks.length,6);
+  assert.equal(integration.workMap.length,6);
+  assert.equal(integration.roles.length,3);
+  assert.equal(integration.weeks.length,6);
+  assert.equal(integration.risks.length,4);
+  assert.equal(integration.completion.length,8);
+  assert.match(integration.notes[0],/չենք կրկնում.*Թվերը թիրախներ են/);
+  assert.match(integration.notes[3],/B2B հաճախորդների բազայով/);
+  assert.match(integration.notes[4],/Յուրաքանչյուր ընկերության համար առանձին ծրագիր չենք ստեղծում/);
+  assert.match(integration.notes[10],/ուսանող.*դասախոս.*բանավոր.*ղեկավար/);
+  assert.equal(deckNav.target(0,16,'next'),1);
+  assert.equal(deckNav.target(15,16,'next'),15);
+  assert.equal(deckNav.target(8,16,'previous'),7);
+  assert.equal(deckNav.target(8,16,'first'),0);
+  assert.equal(deckNav.target(8,16,'last'),15);
   assert.equal(deckNav.hash(2),'#scene-03');
-  assert.equal(deckNav.fromHash('#scene-13',13),12);
-  assert.equal(deckNav.fromHash('#bad',13),0);
+  assert.equal(deckNav.fromHash('#scene-16',16),15);
+  assert.equal(deckNav.fromHash('#bad',16),0);
 });
 
 test('rendered story produces all eleven scenes in order',async()=>{
@@ -137,7 +141,7 @@ test('production build is self-contained and includes full speaker notes',async(
     }
   }
   assert.equal((notes.match(/<section>/g)||[]).length,11);
-  assert.equal((integrationNotes.match(/<section>/g)||[]).length,13);
+  assert.equal((integrationNotes.match(/<section>/g)||[]).length,16);
   assert.match(integrationHtml,/src="\.\/src\/integration\.js\?v=[a-f0-9]{12}"/);
   assert.match(integrationHtml,/Առաջադրանք 2/);
   assert.match(html,/href="\.\/integration\.html"/);
