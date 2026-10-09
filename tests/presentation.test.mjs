@@ -98,6 +98,15 @@ test('assignment two is a distinct sixteen-scene implementation plan',()=>{
   assert.equal(deckNav.fromHash('#bad',16),0);
 });
 
+test('assignment three covers execution, structure impact and improvement',async()=>{
+  const source=await read('src/execution.js');
+  assert.equal((source.match(/\{k:'/g)||[]).length,13);
+  for(const term of ['Իրագործման փուլեր','Կառուցվածքների տեսակներ','Որոշումներ և լիազորություն','Ռեսուրս և արագություն','Առաջարկվող կառուցվածքը'])assert.match(source,new RegExp(term));
+  assert.match(source,/գործառութային հիմք, թույլ մատրիցային տարրեր/);
+  assert.match(source,/Հավասարակշռված մատրիցային/iu);
+  assert.match(source,/PMBOK® Guide 8/);
+});
+
 test('rendered story produces all eleven scenes in order',async()=>{
   const source=await read('src/main.js');
   const prefix=source.slice(0,source.indexOf('const organization ='));
@@ -118,6 +127,7 @@ test('production build is self-contained and includes full speaker notes',async(
   const html=await read('dist/index.html');
   const notes=await read('dist/speaker-notes.html');
   const integrationHtml=await read('dist/integration.html');
+  const executionHtml=await read('dist/execution.html');
   const integrationNotes=await read('dist/integration-notes.html');
   const css=await read('dist/src/styles.css');
   const mascot=await readFile(path.join(root,'dist/assets/mascot-walk-transparent.png'));
@@ -132,7 +142,7 @@ test('production build is self-contained and includes full speaker notes',async(
   for(const [,url] of css.matchAll(/url\(['"]?(\.\.[^'"\)]+)['"]?\)/g)) {
     assert.ok((await stat(path.resolve(root,'dist/src',url))).isFile(),`Missing CSS asset ${url}`);
   }
-  for(const document of [html,notes,integrationHtml,integrationNotes]){
+  for(const document of [html,notes,integrationHtml,integrationNotes,executionHtml]){
     assert.match(document,/lang="hy"/);
     for(const [,url] of document.matchAll(/(?:src|href)="([^"]+)"/g)){
       if(url.startsWith('#'))continue;
@@ -144,7 +154,10 @@ test('production build is self-contained and includes full speaker notes',async(
   assert.equal((integrationNotes.match(/<section>/g)||[]).length,16);
   assert.match(integrationHtml,/src="\.\/src\/integration\.js\?v=[a-f0-9]{12}"/);
   assert.match(integrationHtml,/Առաջադրանք 2/);
+  assert.match(executionHtml,/src="\.\/src\/execution\.js\?v=[a-f0-9]{12}"/);
+  assert.match(executionHtml,/Առաջադրանք 3/);
   assert.match(html,/href="\.\/integration\.html"/);
+  assert.match(html,/href="\.\/execution\.html"/);
   assert.match(html,/src="\.\/src\/main.js\?v=[a-f0-9]{12}"/,'Published assets must carry a content revision');
   const lists=[...notes.matchAll(/<ol>([\s\S]*?)<\/ol>/g)].map(match=>(match[1].match(/<li>/g)||[]).length);
   assert.deepEqual(lists,[11,8]);
@@ -184,7 +197,7 @@ test('static server handles pages, assets, HEAD, missing files and traversal',{t
     assert.match(home.headers['content-type'],/text\/html; charset=utf-8/);
     assert.equal((await get(port,'/assets/mekstep-logo.jpg')).headers['content-type'],'image/jpeg');
     assert.equal((await get(port,'/assets/mekstep-icon.png')).headers['content-type'],'image/png');
-    for(const url of ['/src/main.js','/src/styles.css','/vendor/gsap.min.js','/assets/mark.svg','/speaker-notes.html','/integration.html','/integration-notes.html','/src/integration.js','/src/integration.css'])assert.equal((await get(port,url)).status,200,url);
+    for(const url of ['/src/main.js','/src/styles.css','/vendor/gsap.min.js','/assets/mark.svg','/speaker-notes.html','/integration.html','/integration-notes.html','/src/integration.js','/src/integration.css','/execution.html','/src/execution.js','/src/execution.css'])assert.equal((await get(port,url)).status,200,url);
     const head=await get(port,'/','HEAD');
     assert.equal(head.status,200);assert.equal(head.body,'');assert.equal(head.headers['content-length'],home.headers['content-length']);
     assert.equal((await get(port,'/missing-resource')).status,404);
