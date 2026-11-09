@@ -11,6 +11,7 @@ await cp(path.join(root,'public'),dist,{recursive:true});
 await copyFile(path.join(root,'index.html'),path.join(dist,'index.html'));
 await copyFile(path.join(root,'integration.html'),path.join(dist,'integration.html'));
 await copyFile(path.join(root,'execution.html'),path.join(dist,'execution.html'));
+for(const file of ['team.html','planning.html']) await copyFile(path.join(root,file),path.join(dist,file));
 for(const file of ['gsap.min.js','ScrollTrigger.min.js']){
   // Source maps are not required at runtime. Remove references to avoid optional requests.
   const source=await readFile(path.join(root,'node_modules/gsap/dist',file),'utf8');
@@ -20,7 +21,7 @@ const gsapPackage=JSON.parse(await readFile(path.join(root,'node_modules/gsap/pa
 await writeFile(path.join(dist,'vendor/GSAP-LICENSE.txt'),`GSAP ${gsapPackage.version}\n${gsapPackage.license}\nCopyright and license notices are also preserved in each vendor script.\n`);
 await writeFile(path.join(dist,'.nojekyll'),'');
 // Content revisions prevent a CDN from mixing new HTML with old scripts/styles.
-for(const htmlFile of ['index.html','integration.html','execution.html']){
+for(const htmlFile of ['index.html','integration.html','execution.html','team.html','planning.html']){
   let builtHtml=await readFile(path.join(dist,htmlFile),'utf8');
   for(const [,url] of builtHtml.matchAll(/(?:src|href)="(\.\/[^"?#]+)"/g)){
     if(url.endsWith('.html'))continue;
