@@ -100,8 +100,8 @@ test('assignment two is a distinct sixteen-scene implementation plan',()=>{
 
 test('assignment three covers execution, structure impact and improvement',async()=>{
   const source=await read('src/execution.js');
-  assert.equal((source.match(/\{k:'/g)||[]).length,13);
-  for(const term of ['Իրագործման փուլեր','Կառուցվածքների տեսակներ','Որոշումներ և լիազորություն','Ռեսուրս և արագություն','Առաջարկվող կառուցվածքը'])assert.match(source,new RegExp(term));
+  assert.equal((source.match(/\{k:'/g)||[]).length,10);
+  for(const term of ['Ի՞նչ է իրագործումը','Կառուցվածքների տեսակներ','Որոշումներ և լիազորություն','Խնդիրների ախտորոշում','Առաջարկվող կառուցվածքը'])assert.match(source,new RegExp(term));
   assert.match(source,/գործառութային հիմք, թույլ մատրիցային տարրեր/);
   assert.match(source,/Հավասարակշռված մատրիցային/iu);
   assert.match(source,/PMBOK® Guide 8/);
